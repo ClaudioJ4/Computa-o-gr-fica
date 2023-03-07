@@ -1,0 +1,30 @@
+import math
+import matplotlib.pyplot as plt
+
+
+def desenha_circulo(raio, centro=(0, 0)):
+
+    x_centro, y_centro = centro
+
+
+    def circulo(t):
+        x = x_centro + raio * math.cos(t)
+        y = y_centro + raio * math.sin(t)
+        return x, y
+
+
+    t = [i / 100 for i in range(0, 628)]
+
+
+    x = [circulo(i)[0] for i in t]
+    y = [circulo(i)[1] for i in t]
+
+
+    plt.plot(x, y)
+    plt.axis('equal')
+    plt.show()
+
+raio = float(input("Raio do circulo: "))
+xcent = float(input("X do centro: "))
+ycent = float(input("Y do centro: "))
+desenha_circulo(raio, (xcent, ycent))
