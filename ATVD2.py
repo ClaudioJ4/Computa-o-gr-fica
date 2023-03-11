@@ -1,5 +1,6 @@
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def desenha_circulo(raio, centro=(0, 0)):
@@ -15,20 +16,20 @@ def desenha_circulo(raio, centro=(0, 0)):
     x = [circulo(i)[0] for i in t]
     y = [circulo(i)[1] for i in t]
 
-    plt.plot(x, y)
+    plt.plot(x, y, color = 'black')
     plt.axis('equal')
     plt.show()
 
 
 def auxliarPM(xc, yc, x, y):
-    plt.scatter(xc + x, yc + y, color='black')
-    plt.scatter(xc - x, yc + y, color='black')
-    plt.scatter(xc + x, yc - y, color='black')
-    plt.scatter(xc - x, yc - y, color='black')
-    plt.scatter(xc + y, yc + x, color='black')
-    plt.scatter(xc - y, yc + x, color='black')
-    plt.scatter(xc + y, yc - x, color='black')
-    plt.scatter(xc - y, yc - x, color='black')
+    plt.plot(xc + x, yc + y, 's', color='black')
+    plt.plot(xc - x, yc + y, 's', color='black')
+    plt.plot(xc + x, yc - y, 's', color='black')
+    plt.plot(xc - x, yc - y, 's', color='black')
+    plt.plot(xc + y, yc + x, 's', color='black')
+    plt.plot(xc - y, yc + x, 's', color='black')
+    plt.plot(xc + y, yc - x, 's', color='black')
+    plt.plot(xc - y, yc - x, 's', color='black')
 
 
 def pontoMedio(xc, yc, r):
@@ -78,10 +79,10 @@ def elipse_ponto_medio(a, b, xc, yc):
         d1 = (b ** 2) - (a ** 2 * b) + ((a ** 2) / 4)
 
         while ((a ** 2) * (y - 0.5)) > ((b ** 2) * (x + 1)):
-            plt.scatter(xc + x, yc + y, color='black')
-            plt.scatter(xc + x, yc - y, color='black')
-            plt.scatter(xc - x, yc + y, color='black')
-            plt.scatter(xc - x, yc - y, color='black')
+            plt.plot(xc + x, yc + y, 's', color='black')
+            plt.plot(xc + x, yc - y, 's', color='black')
+            plt.plot(xc - x, yc + y, 's', color='black')
+            plt.plot(xc - x, yc - y, 's', color='black')
 
 
             if d1 < 0:
@@ -96,10 +97,10 @@ def elipse_ponto_medio(a, b, xc, yc):
         d2 = ((b ** 2) * (x + 0.5) ** 2) + ((a ** 2) * (y - 1) ** 2) - (a ** 2) * (b ** 2)
 
         while y > 0:
-            plt.scatter(xc + x, yc + y, color='black')
-            plt.scatter(xc + x, yc - y, color='black')
-            plt.scatter(xc - x, yc + y, color='black')
-            plt.scatter(xc - x, yc - y, color='black')
+            plt.plot(xc + x, yc + y, 's', color='black')
+            plt.plot(xc + x, yc - y, 's', color='black')
+            plt.plot(xc - x, yc + y, 's', color='black')
+            plt.plot(xc - x, yc - y, 's', color='black')
 
             if d2 < 0:
                 x += 1
@@ -108,10 +109,38 @@ def elipse_ponto_medio(a, b, xc, yc):
             else:
                 y -= 1
                 d2 += (a ** 2) * (-2 * y + 3)
-        a = a - 2
-        b = b - 2
+        a = a - 1
+        b = b - 1
 
     plt.axis('equal')
+    plt.show()
+
+
+def fill_polygon():
+    points = np.array([[1, 1], [3, 1], [2, 3], [4, 1]])
+
+    img = np.zeros((4, 4))
+
+    xmin, ymin = np.min(points, axis=0)
+    xmax, ymax = np.max(points, axis=0)
+
+    
+    for y in range(ymin, ymax + 1):
+        intersections = []
+        for i in range(len(points)):
+            p1, p2 = points[i], points[(i + 1) % len(points)]
+            if p1[1] <= y < p2[1] or p2[1] <= y < p1[1]:
+                x = int(p1[0] + (p2[0] - p1[0]) * (y - p1[1]) / (p2[1] - p1[1]))
+                intersections.append(x)
+        intersections.sort()
+
+        
+        for i in range(0, len(intersections), 2):
+            x1, x2 = intersections[i:i + 2]
+            img[y, x1:x2 + 1] = 1
+
+    plt.imshow(img, cmap='gray', origin='lower')
+    plt. axis('equal')
     plt.show()
 
 
@@ -123,8 +152,8 @@ while True:
     Digite 1 para obter a resposta da alternativa "i"
     Digite 2 para obter a resposta da alternativa "ii"
     Digite 3 para obter a resposta da alternativa "iii"
-    Digite 4 para obter a resposta da alternativa "d"
-    Digite 5 para obter a resposta da alternativa "e"
+    Digite 4 para obter a resposta da alternativa "elipse"
+    Digite 5 para obter a resposta da alternativa "PDPF"
     Digite 0 para sair
 ------------------------------------------------------------------------------------------------------------------------    
     """)
@@ -157,7 +186,7 @@ while True:
         elipse_ponto_medio(xaxis, yaxis, xcent, ycent)
 
     elif opcao == 5:
-        print("a")
+        fill_polygon()
 
     elif opcao == 0:
         break
