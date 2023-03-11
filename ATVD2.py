@@ -11,7 +11,7 @@ def desenha_circulo(raio, centro=(0, 0)):
         y = y_centro + raio * math.sin(t)
         return x, y
 
-    t = [i/50for i in range(0, 360)]
+    t = [i/50 for i in range(0, 360)]
 
     x = [circulo(i)[0] for i in t]
     y = [circulo(i)[1] for i in t]
@@ -117,31 +117,21 @@ def elipse_ponto_medio(a, b, xc, yc):
 
 
 def fill_polygon():
-    points = np.array([[1, 1], [3, 1], [2, 3], [4, 1], [2, 2]])
 
-    img = np.zeros((4, 4))
+        x = np.array([2, 5, 4, 3, 3, 1, 0])
+        y = np.array([2, 1, 2, 3, 2, 3, 1])
 
-    xmin, ymin = np.min(points, axis=0)
-    xmax, ymax = np.max(points, axis=0)
+        y_min = np.min(y)
+        y_max = np.max(y)
 
+        for y_scan in range(y_min, y_max + 1):
+            intersections = np.interp(y_scan, y, x)
+            num_intersections = np.sum(intersections >= np.arange(intersections.size))
+            if num_intersections % 2 == 1:
+                plt.plot(intersections, [y_scan] * intersections.size, color='black')
 
-    for y in range(ymin, ymax + 1):
-        intersections = []
-        for i in range(len(points)):
-            p1, p2 = points[i], points[(i + 1) % len(points)]
-            if p1[1] <= y < p2[1] or p2[1] <= y < p1[1]:
-                x = int(p1[0] + (p2[0] - p1[0]) * (y - p1[1]) / (p2[1] - p1[1]))
-                intersections.append(x)
-        intersections.sort()
-
-
-        for i in range(0, len(intersections), 2):
-            x1, x2 = intersections[i:i + 2]
-            img[y, x1:x2 + 1] = 1
-
-    plt.imshow(img, cmap='gray', origin='lower')
-    plt. axis('equal')
-    plt.show()
+        plt.fill(x, y, color='blue')
+        plt.show()
 
 
 
