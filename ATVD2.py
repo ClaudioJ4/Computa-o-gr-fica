@@ -71,8 +71,50 @@ def circulo_fill(raio, centro=(0, 0)):
     plt.show()
 
 
-def elipse(xc, yc, r):
-    print("a")
+def elipse_ponto_medio(a, b, xc, yc):
+    while a and b > 0:
+        x = 0
+        y = b
+        d1 = (b ** 2) - (a ** 2 * b) + ((a ** 2) / 4)
+
+        while ((a ** 2) * (y - 0.5)) > ((b ** 2) * (x + 1)):
+            plt.scatter(xc + x, yc + y, color='black')
+            plt.scatter(xc + x, yc - y, color='black')
+            plt.scatter(xc - x, yc + y, color='black')
+            plt.scatter(xc - x, yc - y, color='black')
+
+
+            if d1 < 0:
+                x += 1
+                d1 += (b ** 2) * (2 * x + 3)
+            else:
+                x += 1
+                y -= 1
+                d1 += (b ** 2) * (2 * x + 3) + (a ** 2) * (-2 * y + 2)
+
+
+        d2 = ((b ** 2) * (x + 0.5) ** 2) + ((a ** 2) * (y - 1) ** 2) - (a ** 2) * (b ** 2)
+
+        while y > 0:
+            plt.scatter(xc + x, yc + y, color='black')
+            plt.scatter(xc + x, yc - y, color='black')
+            plt.scatter(xc - x, yc + y, color='black')
+            plt.scatter(xc - x, yc - y, color='black')
+
+            if d2 < 0:
+                x += 1
+                y -= 1
+                d2 += (b ** 2) * (2 * x + 2) + (a ** 2) * (-2 * y + 3)
+            else:
+                y -= 1
+                d2 += (a ** 2) * (-2 * y + 3)
+        a = a - 2
+        b = b - 2
+
+    plt.axis('equal')
+    plt.show()
+
+
 
 
 while True:
@@ -108,10 +150,11 @@ while True:
         circulo_fill(raio, (xcent, ycent))
 
     elif opcao == 4:
-        raio = float(input("Raio do circulo: "))
+        xaxis = float(input("Eixo X: "))
+        yaxis = float(input("Eixo Y: "))
         xcent = float(input("X do centro: "))
         ycent = float(input("Y do centro: "))
-        elipse(xcent, ycent, raio)
+        elipse_ponto_medio(xaxis, yaxis, xcent, ycent)
 
     elif opcao == 5:
         print("a")
