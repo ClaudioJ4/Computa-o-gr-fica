@@ -117,14 +117,14 @@ def elipse_ponto_medio(a, b, xc, yc):
 
 
 def fill_polygon():
-    points = np.array([[1, 1], [3, 1], [2, 3], [4, 1]])
+    points = np.array([[1, 1], [3, 1], [2, 3], [4, 1], [2, 2]])
 
     img = np.zeros((4, 4))
 
     xmin, ymin = np.min(points, axis=0)
     xmax, ymax = np.max(points, axis=0)
 
-    
+
     for y in range(ymin, ymax + 1):
         intersections = []
         for i in range(len(points)):
@@ -134,7 +134,7 @@ def fill_polygon():
                 intersections.append(x)
         intersections.sort()
 
-        
+
         for i in range(0, len(intersections), 2):
             x1, x2 = intersections[i:i + 2]
             img[y, x1:x2 + 1] = 1
