@@ -1,118 +1,157 @@
-import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 
-def desenha_circulo(raio, centro=(0, 0)):
-    x_centro, y_centro = centro
 
-    def circulo(t):
-        x = x_centro + raio * math.cos(t)
-        y = y_centro + raio * math.sin(t)
-        return x, y
+def desenhar(x1, x2, x3, y1, y2, y3, color):
+    plt.plot([55, 70], [90, 50], color='black')
+    plt.plot([70, 40], [50, 50], color='black')
+    plt.plot([40, 55], [50, 90], color='black')
 
-    t = [i/50for i in range(0, 360)]
-
-    x = [circulo(i)[0] for i in t]
-    y = [circulo(i)[1] for i in t]
-
-    plt.plot(x, y, color = 'black')
-    plt.axis('equal')
-    plt.show()
-
-
-def auxliarPM(xc, yc, x, y):
-    plt.plot(xc + x, yc + y, 's', color='black')
-    plt.plot(xc - x, yc + y, 's', color='black')
-    plt.plot(xc + x, yc - y, 's', color='black')
-    plt.plot(xc - x, yc - y, 's', color='black')
-    plt.plot(xc + y, yc + x, 's', color='black')
-    plt.plot(xc - y, yc + x, 's', color='black')
-    plt.plot(xc + y, yc - x, 's', color='black')
-    plt.plot(xc - y, yc - x, 's', color='black')
-
-
-def pontoMedio(xc, yc, r):
-    x = 0
-    y = r
-    p = 1 - r
-
-    auxliarPM(xc, yc, x, y)
-
-    while x < y:
-        x += 1
-        if p < 0:
-            p += 2 * x + 1
-        else:
-            y -= 1
-            p += 2 * (x - y) + 1
-        auxliarPM(xc, yc, x, y)
+    plt.plot([x1, x2], [y1, y2], color=color)
+    plt.plot([x2, x3], [y2, y3], color=color)
+    plt.plot([x3, x1], [y3, y1], color=color)
 
     plt.axis('equal')
     plt.show()
 
 
-def circulo_fill(raio, centro=(0, 0)):
-    x_centro, y_centro = centro
-
-    while raio >= 0:
-        def circulo(t):
-            x = x_centro + raio * math.cos(t)
-            y = y_centro + raio * math.sin(t)
-            return x, y
-
-        t = [i / 50 for i in range(0, 360)]
-
-        x = [circulo(i)[0] for i in t]
-        y = [circulo(i)[1] for i in t]
-        plt.plot(x, y, color='black')
-        raio = raio -0.1
-
-    plt.axis('equal')
-    plt.show()
+def escala(x, y, Ex, Ey):
+    m1 = np.array([[Ex, 0, 0], [0, Ey, 0], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
 
 
-def elipse_ponto_medio(a, b, xc, yc):
-    while a and b > 0:
-        x = 0
-        y = b
-        d1 = (b ** 2) - (a ** 2 * b) + ((a ** 2) / 4)
+def rotacao(x, y, angulo):
+    if angulo == 30:
+        sen = 0.5
+        cos = 1.7320508075/2
+    elif angulo == 45:
+        sen = 1.414213562/2
+        cos = 1.414213562/2
+    elif angulo == 60:
+        sen = 1.7320508075/2
+        cos = 0.5
 
-        while ((a ** 2) * (y - 0.5)) > ((b ** 2) * (x + 1)):
-            plt.plot(xc + x, yc + y, 's', color='black')
-            plt.plot(xc + x, yc - y, 's', color='black')
-            plt.plot(xc - x, yc + y, 's', color='black')
-            plt.plot(xc - x, yc - y, 's', color='black')
-
-
-            if d1 < 0:
-                x += 1
-                d1 += (b ** 2) * (2 * x + 3)
-            else:
-                x += 1
-                y -= 1
-                d1 += (b ** 2) * (2 * x + 3) + (a ** 2) * (-2 * y + 2)
+    m1 = np.array([[cos, -1*(sen), 0], [sen, cos, 0], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
 
 
-        d2 = ((b ** 2) * (x + 0.5) ** 2) + ((a ** 2) * (y - 1) ** 2) - (a ** 2) * (b ** 2)
+def translacao(x, y, T1, T2):
+    m1 = np.array([[1, 0, T1], [0, 1, T2], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
 
-        while y > 0:
-            plt.plot(xc + x, yc + y, 's', color='black')
-            plt.plot(xc + x, yc - y, 's', color='black')
-            plt.plot(xc - x, yc + y, 's', color='black')
-            plt.plot(xc - x, yc - y, 's', color='black')
 
-            if d2 < 0:
-                x += 1
-                y -= 1
-                d2 += (b ** 2) * (2 * x + 2) + (a ** 2) * (-2 * y + 3)
-            else:
-                y -= 1
-                d2 += (a ** 2) * (-2 * y + 3)
-        a = a - 1
-        b = b - 1
+def espelhamentoX(x, y):
+    m1 = np.array([[-1, 0, 0], [0, 1, 0], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
 
-    plt.axis('equal')
-    plt.show()
+
+def arbEscala(x, y, x0, y0, Ex, Ey):
+    arbx = x0*(1-Ex)
+    arby = y0*(1-Ey)
+    m1 = np.array([[Ex, 0, arbx], [0, Ey, arby], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
+
+
+def arbRotacao(x, y, x0, y0, angulo):
+    if angulo == 30:
+        sen = 0.5
+        cos = 1.7320508075/2
+    elif angulo == 45:
+        sen = 1.414213562/2
+        cos = 1.414213562/2
+    elif angulo == 60:
+        sen = 1.7320508075/2
+        cos = 0.5
+
+    arbx = x0*(1- cos) + y0*sen
+    arby = y0*(1- cos) - x0*sen
+    m1 = np.array([[cos, -1*(sen), arbx], [sen, cos, arby], [0, 0, 1]])
+    m2 = np.array([[x], [y], [1]])
+    m3 = np.matmul(m1, m2)
+    a = m3[0]
+    b = m3[1]
+    c = [a, b]
+    return c
+
+
+def alternativaA():
+    p1 = escala(55, 90, 2, 2)
+    p2 = escala(70, 50, 2, 2)
+    p3 = escala(40, 50, 2, 2)
+    desenhar(p1[0], p2[0], p3[0], p1[1], p2[1], p3[1], 'red')
+    print(p1, "\n________\n",  p2, "\n________\n", p3)
+
+
+
+
+def alternativaB():
+    p1 = rotacao(55, 90, 30)
+    p2 = rotacao(70, 50, 30)
+    p3 = rotacao(40, 50, 30)
+    desenhar(p1[0], p2[0], p3[0], p1[1], p2[1], p3[1], 'red')
+    print(p1, "\n________\n", p2, "\n________\n", p3)
+
+
+
+
+def alternativaC():
+    p1 = translacao(55, 90, -3, 4)
+    p2 = translacao(70, 50, -3, 4)
+    p3 = translacao(40, 50, -3, 4)
+    desenhar(p1[0], p2[0], p3[0], p1[1], p2[1], p3[1], 'red')
+    print(p1, "\n________\n", p2, "\n________\n", p3)
+
+
+
+
+def alternativaD():
+    p1 = espelhamentoX(55, 90)
+    p2 = espelhamentoX(70, 50)
+    p3 = espelhamentoX(40, 50)
+    desenhar(p1[0], p2[0], p3[0], p1[1], p2[1], p3[1], 'red')
+    print(p1, "\n________\n", p2, "\n________\n", p3)
+
+
+
+
+def alternativaE():
+    p1 = arbEscala(55, 90, 55, 65, 2, 2)
+    p2 = arbEscala(70, 50, 55, 65, 2, 2)
+    p3 = arbEscala(40, 50, 55, 65, 2, 2)
+    desenhar(p1[0], p2[0], p3[0], p1[1], p2[1], p3[1], 'red')
+    print(p1, "\n________\n", p2, "\n________\n", p3)
+
+    p4 = arbRotacao(55, 90, 55, 65, 30)
+    p5 = arbRotacao(70, 50, 55, 65, 30)
+    p6 = arbRotacao(40, 50, 55, 65, 30)
+    desenhar(p4[0], p5[0], p6[0], p4[1], p5[1], p6[1], 'blue')
+    print("\n\n", p4, "\n________\n", p5, "\n________\n", p6)
 
 
 
@@ -120,11 +159,11 @@ def elipse_ponto_medio(a, b, xc, yc):
 while True:
     print("""
 ------------------------------------------------------------------------------------------------------------------------
-    Digite 1 para obter a resposta da alternativa "i"
-    Digite 2 para obter a resposta da alternativa "ii"
-    Digite 3 para obter a resposta da alternativa "iii"
-    Digite 4 para obter a resposta da alternativa "elipse"
-    Digite 5 para obter a resposta da alternativa "PDPF"
+    Digite 1 para obter a resposta da alternativa "a"
+    Digite 2 para obter a resposta da alternativa "b"
+    Digite 3 para obter a resposta da alternativa "c"
+    Digite 4 para obter a resposta da alternativa "d"
+    Digite 5 para obter a resposta da alternativa "e"
     Digite 0 para sair
 ------------------------------------------------------------------------------------------------------------------------    
     """)
@@ -132,32 +171,19 @@ while True:
     opcao = int(input("O que gostaria de fazer ? : "))
 
     if opcao == 1:
-        raio = float(input("Raio do circulo: "))
-        xcent = float(input("X do centro: "))
-        ycent = float(input("Y do centro: "))
-        desenha_circulo(raio, (xcent, ycent))
+        alternativaA()
 
     elif opcao == 2:
-        raio = float(input("Raio do circulo: "))
-        xcent = float(input("X do centro: "))
-        ycent = float(input("Y do centro: "))
-        pontoMedio(xcent, ycent, raio)
+        alternativaB()
 
     elif opcao == 3:
-        raio = float(input("Raio do circulo: "))
-        xcent = float(input("X do centro: "))
-        ycent = float(input("Y do centro: "))
-        circulo_fill(raio, (xcent, ycent))
+        alternativaC()
 
     elif opcao == 4:
-        xaxis = float(input("Eixo X: "))
-        yaxis = float(input("Eixo Y: "))
-        xcent = float(input("X do centro: "))
-        ycent = float(input("Y do centro: "))
-        elipse_ponto_medio(xaxis, yaxis, xcent, ycent)
+        alternativaD()
 
     elif opcao == 5:
-        print("a")
+        alternativaE()
 
     elif opcao == 0:
         break
